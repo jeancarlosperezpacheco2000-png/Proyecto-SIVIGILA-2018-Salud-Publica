@@ -1,0 +1,26 @@
+SUBIR A GITHUB – PASOS PARA ESTE PROYECTO
+
+1. En GitHub crea un repositorio nuevo llamado:
+   Proyecto-SIVIGILA-2018-Salud-Publica
+2. Selecciona PUBLIC.
+3. No marques “Add a README file”, “Add .gitignore” ni licencia.
+4. Abre esta carpeta en VS Code y abre Terminal > New Terminal.
+5. Ejecuta uno por uno:
+
+   git init
+   git add .
+   git commit -m "Entrega proyecto SIVIGILA 2018"
+   git branch -M main
+   git remote add origin https://github.com/jeancarlosperezpacheco2000-png/Proyecto-SIVIGILA-2018-Salud-Publica.git
+   git push -u origin main
+
+Si Git pide configurar identidad por primera vez:
+   git config --global user.name "Jean Carlos Perez Pacheco"
+   git config --global user.email "jeancarlosperezpacheco2000@gmail.com"
+
+IMPORTANTE:
+- Primero crea el repositorio web con el mismo nombre indicado.
+- No subas .env ni la carpeta venv.
+- .gitignore ya excluye esos elementos.
+- Al terminar, abre el repositorio en GitHub y verifica que se vean las carpetas.
+- Pega el enlace del repositorio en la entrega individual de EVA.

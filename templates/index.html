@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SIVIGILA 2018 | Consulta de salud pública</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='estilos.css') }}">
+</head>
+<body>
+  <header class="hero">
+    <div class="container hero-inner">
+      <div class="eyebrow">PROYECTO ACADÉMICO · DATOS ABIERTOS DE COLOMBIA</div>
+      <h1>SIVIGILA 2018</h1>
+      <p>Consulta y análisis básico de registros agregados de vigilancia en salud pública, publicados por el Instituto Nacional de Salud.</p>
+      <form action="{{ url_for('sincronizar') }}" method="post">
+        <button class="button button-light" type="submit">⟳ Consultar API y guardar registros</button>
+      </form>
+    </div>
+  </header>
+
+  <main class="container main-content">
+    {% with mensajes = get_flashed_messages(with_categories=true) %}
+      {% for categoria, mensaje in mensajes %}
+        <div class="alert {{ categoria }}">{{ mensaje }}</div>
+      {% endfor %}
+    {% endwith %}
+
+    <section class="stats" aria-label="Resumen de la base de datos">
+      <article class="stat"><span>Registros guardados</span><strong>{{ "{:,.0f}".format(resumen.total_registros).replace(",", ".") }}</strong></article>
+      <article class="stat"><span>Casos sumados en la base</span><strong>{{ "{:,.0f}".format(resumen.casos_sumados).replace(",", ".") }}</strong></article>
+      <article class="stat"><span>Municipios identificados</span><strong>{{ resumen.municipios }}</strong></article>
+      <article class="stat"><span>Eventos identificados</span><strong>{{ resumen.eventos }}</strong></article>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div><div class="eyebrow dark">CONSULTA EN SQL SERVER</div><h2>Registros epidemiológicos</h2></div>
+        <span class="chip">Año de referencia: 2018</span>
+      </div>
+      <form class="search" method="get" action="{{ url_for('inicio') }}">
+        <input type="search" name="q" value="{{ filtro }}" placeholder="Buscar por municipio, evento o código..." aria-label="Buscar registros">
+        <button class="button" type="submit">Buscar</button>
+        <a class="clear" href="{{ url_for('inicio') }}">Limpiar</a>
+      </form>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Cód. evento</th><th>Evento de salud pública</th><th>Año</th><th>Semana</th><th>Cód. dpto.</th><th>Municipio</th><th>Cód. municipio</th><th>Casos</th></tr>
+          </thead>
+          <tbody>
+            {% for fila in registros %}
+              <tr>
+                <td>{{ fila.cod_eve if fila.cod_eve is not none else "—" }}</td>
+                <td>{{ fila.nombre or "—" }}</td>
+                <td>{{ fila.ano or "—" }}</td>
+                <td>{{ fila.semana or "—" }}</td>
+                <td>{{ fila.cod_dpto_o or "—" }}</td>
+                <td>{{ fila.nom_mun or "—" }}</td>
+                <td>{{ fila.cod_mun_o or "—" }}</td>
+                <td class="number">{{ fila.conteo_casos if fila.conteo_casos is not none else "—" }}</td>
+              </tr>
+            {% else %}
+              <tr><td colspan="8" class="empty">No hay registros para mostrar. Ejecuta la sincronización para consultar la API.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Se muestran hasta 100 resultados de la base de datos. El resumen se calcula sobre todos los registros almacenados localmente.</p>
+    </section>
+
+    <footer>
+      <p>Fuente: <a href="https://www.datos.gov.co/Salud-y-Protecci-n-Social/SIVIGILA-2018/xd2n-cu8j" target="_blank" rel="noopener">Portal Nacional de Datos Abiertos – SIVIGILA 2018</a>.</p>
+      <p>Proyecto académico de Jean Carlos Pérez Pacheco · Información histórica correspondiente a 2018.</p>
+    </footer>
+  </main>
+</body>
+</html>
